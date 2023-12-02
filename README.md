@@ -10,14 +10,60 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 - [DJango](https://www.djangoproject.com/)
 - Dica postgreSQL [vivaolinux](https://www.vivaolinux.com.br/artigo/psql-Conheca-o-basico)
 - [Django REST Framework](https://www.django-rest-framework.org/)
-
+- [Posgres dockerhub](https://hub.docker.com/_/postgres)
 
 1. <span style="color:383E42"><b>Preparando ambiente</b></span>
     <details><summary><span style="color:Chocolate">Detalhes</span></summary>
     <p>
 
+    - Criar repositório no github com `gitignore` e `README.md`
+    - Editar `README` e colocar estrutura básica
+    - Criar diretório `readmeImages` e colocar imagens para uso no `README.md`
+    - Editar `gitignore` e colocar configuração para `python, django, vscode/visualstudio code`
+        >Use o site [gitignore.io](https://www.toptal.com/developers/gitignore/)
+
+    - Criar e ativar ambiente virtual
+        ```sh
+        python3 -m venv venv
+        source venv/bin/activate
+        ```
 
 
+
+    </p>
+
+    </details> 
+
+    ---
+
+2. <span style="color:383E42"><b>Criar container fusion-postgres usando `POSTGRESQL` do `dockerhub`</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - [Documentação dockerhub](https://hub.docker.com/_/postgres)
+        - Baixar imagem POSTGRESQL
+            ```bash
+            docker pull postgres
+            ```
+        - Cria container 
+        Nomeando `--name fusion-postgres` 
+        Adiciono informação da porta `-p 5432:5432`
+        Informo a senha `POSTGRES_PASSWORD=suasenha`
+        ```bash
+        docker run -p 5432:5432 --name django-rest -e POSTGRES_PASSWORD=suasenha -d postgres
+
+        ```
+
+        - Iniciar container
+            ```bash
+            docker start fusion-postgres
+            ```
+        - Verificar `id` container e `ip` do container
+            ```bash
+            sudo docker ps
+            sudo docker container inspect idcontainer
+            ```
+    
     </p>
 
     </details> 
