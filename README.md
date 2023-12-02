@@ -36,7 +36,7 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
-2. <span style="color:383E42"><b>Criar container fusion-postgres usando `POSTGRESQL` do `dockerhub`</b></span>
+2. <span style="color:383E42"><b>Criar container django-rest usando `POSTGRESQL` do `dockerhub`</b></span>
     <details><summary><span style="color:Chocolate">Detalhes</span></summary>
     <p>
 
@@ -46,7 +46,7 @@ Linux, Visual Studio Code, Docker e PostgreSQL
             docker pull postgres
             ```
         - Cria container 
-        Nomeando `--name fusion-postgres` 
+        Nomeando `--name django-rest` 
         Adiciono informação da porta `-p 5432:5432`
         Informo a senha `POSTGRES_PASSWORD=suasenha`
         ```bash
@@ -56,13 +56,51 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
         - Iniciar container
             ```bash
-            docker start fusion-postgres
+            docker start django-rest
             ```
         - Verificar `id` container e `ip` do container
             ```bash
             sudo docker ps
             sudo docker container inspect idcontainer
             ```
+
+        - Acessar container no modo interativo - Criação `database` - container em execução
+            >Criação database e usuário
+            ```bash
+            sudo docker exec -it idcontainer bash
+            ```
+            - Acessando postgres `database` com usuário `postgres`
+                ```bash
+                psql -U postgres
+                ```
+            - Criar database
+                ```bash
+                create database "django-rest-db";
+                ```
+            -  Criar usuário no postgres
+                ```bash
+                create user cristiano superuser inherit createdb createrole password 'surasenha';
+                ```
+
+            - Saindo do postgres
+                ```bash
+                \q
+                ```
+            - Acessando database `django-rest-db`. Use o  `ip` do container
+                >Comandos válidos
+                ```bash
+                psql -U postgres -d django-rest-db
+                psql ipcontainer -U postgres -d django-rest-db
+
+                psql -h ipcontainer -U postgres -d django-rest-db
+                ```
+            - Listando database
+                ```bash
+                \l
+                ```
+            - Sair do container
+                ```bash
+                exit
     
     </p>
 
