@@ -8,9 +8,12 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
 ## Documentação
 - [DJango](https://www.djangoproject.com/)
+- [Django Versões](https://www.djangoproject.com/download/)
 - Dica postgreSQL [vivaolinux](https://www.vivaolinux.com.br/artigo/psql-Conheca-o-basico)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 - [Posgres dockerhub](https://hub.docker.com/_/postgres)
+
+## Desenvolvimento
 
 1. <span style="color:383E42"><b>Preparando ambiente</b></span>
     <details><summary><span style="color:Chocolate">Detalhes</span></summary>
@@ -27,6 +30,12 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         python3 -m venv venv
         source venv/bin/activate
         ```
+
+    - Instalação do `Django LTS 3.2.23`
+        ```bash
+        pip install django==3.2.23
+        ```
+
 
 
 
@@ -108,6 +117,59 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+3. <span style="color:383E42"><b>Criação Projeto `escola` e app `cursos` </b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Criação Projeto `escola` e app `cursos`
+        ```bash
+        django-admin startproject escola .
+        django-admin startapp cursos
+        ```
+    
+    - Inclusão do app `cursos`, timezone e configuração arquivos estáticos no arquivo settings.py
+        App
+        ```python
+        INSTALLED_APPS = [
+            #...
+            'django.contrib.staticfiles',
+
+            'cursos',
+        ]
+        ```
+
+        Timezone
+        ```python
+        # Internationalization
+        # https://docs.djangoproject.com/en/3.2/topics/i18n/
+
+        LANGUAGE_CODE = 'pt-br'
+
+        TIME_ZONE = 'America/Sao_Paulo'
+
+        USE_I18N = True
+
+        USE_L10N = True
+
+        USE_TZ = True
+        ```
+
+        Arquivos estáticos
+        ```python
+        # Static files (CSS, JavaScript, Images)
+        # https://docs.djangoproject.com/en/3.1/howto/static-files/
+
+        STATIC_URL = '/static/'
+        STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+        MEDIA_URL = 'media/'
+        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+        ```
+
+    </p>
+
+    </details> 
+
+    ---
 
 
 ## Meta
