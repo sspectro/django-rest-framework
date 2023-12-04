@@ -31,9 +31,31 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         source venv/bin/activate
         ```
 
-    - Instalação do `Django LTS 3.2.23`
+    - Instalação do `Django LTS 3.2.23` e `psycopg2-binary` 
         ```bash
+        sudo apt update
         pip install django==3.2.23
+        pip install psycopg2-binary
+        ```
+
+    - Criando `.env` variáveis de ambiente
+        Instalação `dotenv`
+        ```bash
+        pip install python-dotenv
+        ```
+
+        ```python
+        'SENHA_POSTGRESQL': 'senha_postgresql',
+        'USUARIO_POSTGRESQL': 'username',
+        'SECRET_SETTINGS': 'secret_django',
+        'POSTGRESQL_DB_NAME': 'databasename',
+        'HOST': '172.17.0.2'
+        ```
+
+    - Inclusão `dotenv` em settings.py
+        ```python
+        from dotenv import load_dotenv
+        load_dotenv()
         ```
 
 
@@ -171,6 +193,98 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+4. <span style="color:383E42"><b>Criação dos Models e Inclusão ao Painel Admin</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Models em `models.py`
+        ```python
+        from django.db import models
+
+        # Create your models here.
+        class Base(models.Model):
+            criacao = models.DateTimeField(auto_now_add=True)
+            atualizacao = models.DateTimeField(auto_now=True)
+            ativo = models.BooleanField(default=True)
+
+            class Meta:
+                abstract = True
+
+        class Curso(Base):
+            titulo = models.CharField(max_length=255)
+            url = models.URLField(unique=True)
+
+            class Meta:
+                verbose_name = 'Curso'
+                verbose_name_plural = 'Cursos'
+                ordering = ['id']  # Ordenação por id
+
+            def __str__(self):
+                return self.titulo
+            
+        class Avaliacao(Base):
+            curso = models.ForeignKey(Curso, related_name='avaliacoes', on_delete=models.CASCADE)
+            nome = models.CharField(max_length=255)
+            email = models.EmailField()
+            comentario = models.TextField(blank=True, default='')
+            avaliacao = models.DecimalField(max_digits=2, decimal_places=1)
+
+            class Meta:
+                verbose_name = 'Avaliação'
+                verbose_name_plural = 'Avaliações'
+                unique_together = ['email', 'curso'] # Somente 1 avaliação com mesmo curso e email
+                ordering = ['id']  # Ordena o modelo pelo id, caso queira ordem inversa (decrescente)
+                # ordering = ['-id']  # Ordena o modelo pelo id, ordem inversa (decrescente)
+
+            def __str__(self):
+                return f'{self.nome} avaliou o curso {self.curso} com nota {self.avaliacao}'
+        ```
+
+    - Models em `admin.py`
+        ```python
+        from django.contrib import admin
+
+        from .models import Curso, Avaliacao
+
+
+        @admin.register(Curso)
+        class CursoAdmin(admin.ModelAdmin):
+            list_display = ('titulo', 'url', 'criacao', 'atualizacao', 'ativo')
+
+        @admin.register(Avaliacao)
+        class AvaliacaoAdmin(admin.ModelAdmin):
+            list_display = ('curso', 'nome', 'email', 'avaliacao', 'criacao', 'atualizacao', 'ativo')
+        ```
+    
+    - Executar migração para criação das tabelas no banco de dados
+        Gera os arquivos para migração/criação das tabelas
+        ```bash
+        python3 manage.py makemigrations
+        ```
+
+        Executar migração
+        ```bash
+        python3 manage.py migrate
+        ```
+
+    </p>
+
+    </details> 
+
+    ---
+
+4. <span style="color:383E42"><b>Inclusão dos Models ao Painel Admin</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+
+
+
+    </p>
+
+    </details> 
+
+    ---
 
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>
