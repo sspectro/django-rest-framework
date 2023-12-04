@@ -84,7 +84,6 @@ WSGI_APPLICATION = 'escola.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-print(os.environ['POSTGRESQL_DB_NAME'])
 
 DATABASES = {
     'default': {

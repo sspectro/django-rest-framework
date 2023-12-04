@@ -43,13 +43,13 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         ```bash
         pip install python-dotenv
         ```
-
+        .env
         ```python
-        'SENHA_POSTGRESQL': 'senha_postgresql',
-        'USUARIO_POSTGRESQL': 'username',
-        'SECRET_SETTINGS': 'secret_django',
-        'POSTGRESQL_DB_NAME': 'databasename',
-        'HOST': '172.17.0.2'
+        'SENHA_POSTGRESQL'='senha_postgresql'
+        'USUARIO_POSTGRESQL'='username'
+        'SECRET_SETTINGS'='secret_django'
+        'POSTGRESQL_DB_NAME'='databasename'
+        'HOST'='Host'
         ```
 
     - Inclusão `dotenv` em settings.py
@@ -57,9 +57,6 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         from dotenv import load_dotenv
         load_dotenv()
         ```
-
-
-
 
     </p>
 
@@ -76,14 +73,14 @@ Linux, Visual Studio Code, Docker e PostgreSQL
             ```bash
             docker pull postgres
             ```
+
         - Cria container 
         Nomeando `--name django-rest` 
         Adiciono informação da porta `-p 5432:5432`
         Informo a senha `POSTGRES_PASSWORD=suasenha`
-        ```bash
-        docker run -p 5432:5432 --name django-rest -e POSTGRES_PASSWORD=suasenha -d postgres
-
-        ```
+            ```bash
+            docker run -p 5432:5432 --name django-rest -e POSTGRES_PASSWORD=suasenha -d postgres
+            ```
 
         - Iniciar container
             ```bash
@@ -132,6 +129,7 @@ Linux, Visual Studio Code, Docker e PostgreSQL
             - Sair do container
                 ```bash
                 exit
+                ```
     
     </p>
 
@@ -273,18 +271,34 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
-4. <span style="color:383E42"><b>Inclusão dos Models ao Painel Admin</b></span>
-    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+5. <span style="color:383E42"><b>Criar Suer Usuáriod Django</b></span>
+    <!-- <details><summary><span style="color:Chocolate">Detalhes</span></summary> -->
     <p>
 
+    ```bash
+    python3 manage.py createsuperuser
+    ```
 
+    - Testar
+        ```bash
+        python3 manage.py runserver
+        ```
 
+    - Cadastrar alguns cursos via painel admin
+        `http://127.0.0.1:8000/admin/`
+        Curoso:
+        `Criação de APIs REST com Django REST Framework`
+        `Programação para web com Django Framework`
+        `Programação com JavaScript`
+    
+    - Criar avalições
 
     </p>
 
-    </details> 
+    <!-- </details>  -->
 
     ---
+
 
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>
