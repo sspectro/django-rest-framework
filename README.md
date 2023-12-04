@@ -12,7 +12,8 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 - Dica postgreSQL [vivaolinux](https://www.vivaolinux.com.br/artigo/psql-Conheca-o-basico)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 - [Posgres dockerhub](https://hub.docker.com/_/postgres)
-
+- [Insomnia Rest](https://insomnia.rest/download)
+- [Postman](https://www.postman.com/downloads/)
 ## Desenvolvimento
 
 1. <span style="color:383E42"><b>Preparando ambiente</b></span>
@@ -327,6 +328,24 @@ Linux, Visual Studio Code, Docker e PostgreSQL
             )
         }
         ```
+
+    - Incluir url padrão do `djangorestframework` em `urls.py` do projeto escola e testar
+        ```python
+        #...
+        urlpatterns = [
+            path('admin/', admin.site.urls),
+            path('auth/', include('rest_framework.urls')),
+        ]    
+        ```
+        Testar
+        ```bash
+        python3 manage.py runserver
+        ```
+        Login:
+        `http://127.0.0.1:8000/auth/login`
+
+        Logout:
+        `http://127.0.0.1:8000/auth/logout`
 
 
 
