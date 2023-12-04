@@ -271,7 +271,7 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
-5. <span style="color:383E42"><b>Criar Suer Usuáriod Django</b></span>
+5. <span style="color:383E42"><b>Criar SuperUser Django e Instalar o DjangoRESTFramework, Markdown e django-filter</b></span>
     <!-- <details><summary><span style="color:Chocolate">Detalhes</span></summary> -->
     <p>
 
@@ -292,6 +292,43 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         `Programação com JavaScript`
     
     - Criar avalições
+
+    - Instalação djangorestframework
+        ```bash
+        pip install djangorestframework markdown django-filter
+        ```
+
+    - Criação arquivo requirements
+    Contém informaçẽos sobre todas as bibliotecas utilizadas no projeto. Para atualizar o arquivo, basta executar o comando novamente após instalar outras bibliotecas.
+        ```sh
+        pip freeze > requirements.txt
+        ```
+
+    - Incluir rest_framework e django_filters ao settings.py
+        ```python
+        INSTALLED_APPS = [
+            #...
+
+            'django_filters',
+            'rest_framework',
+
+            'cursos',
+        ]
+
+        #...
+        #...
+        # DRF
+        REST_FRAMEWORK = {
+            'DEFAULT_AUTHENTICATION_CLASSES': (
+                'rest_framework.authentication.SessionAuthentication',
+            ),
+            'DEFAULT_PERMISSION_CLASSES': (
+                'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+            )
+        }
+        ```
+
+
 
     </p>
 
