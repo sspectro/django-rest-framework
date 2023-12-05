@@ -448,10 +448,11 @@ Linux, Visual Studio Code, Docker e PostgreSQL
     <details><summary><span style="color:Chocolate">Detalhes</span></summary>
     <p>
 
-    - HTTP GET
+    - HTTP GET e POST
         ```python
         from rest_framework.views import APIView
         from rest_framework.response import Response
+        from rest_framework import status
 
         from .models import Curso, Avaliacao
         from .serializers import CursoSerializer, AvaliacaoSerializer
@@ -459,23 +460,35 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
         class CursoAPIView(APIView):
             """
-            API de Cursos da GEEK
+            API de Cursos da Geek University
             """
-
             def get(self, request):
                 cursos = Curso.objects.all()
-                serializer = CursoSerializer(cursos, many=True)
-                return Response(serializer.data)
+                serilizer = CursoSerializer(cursos, many=True)
+                return Response(serilizer.data)
+
+            def post(self, request):
+                serializer = CursoSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
         class AvaliacaoAPIView(APIView):
             """
-            API de Avalições da GEEK
+            API de Avaliações da Geek
             """
             def get(self, request):
                 avaliacoes = Avaliacao.objects.all()
                 serializer = AvaliacaoSerializer(avaliacoes, many=True)
-                return Response(serializer.data)        
+                return Response(serializer.data)
+
+            def post(self, request):
+                serializer = AvaliacaoSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+      
         ```
 
     - Criação de arquivo de rotas `urls.py` no app cursos
@@ -497,13 +510,12 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         urlpatterns = [
             path('api/v1/', include('cursos.urls')),
         #...
+        ]
         ```
 
     - Testar
         `http://127.0.0.1:8000/api/v1/cursos/`
         `http://127.0.0.1:8000/api/v1/avaliacoes/`
-
-
 
 
     </p>
