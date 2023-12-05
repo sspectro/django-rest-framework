@@ -524,8 +524,62 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+8. <span style="color:383E42"><b>Alterando APIView para uso de Generics</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    [Generics](https://www.django-rest-framework.org/api-guide/generic-views/)
+
+    - APIViews
+        ```python
+        from rest_framework import generics
+
+        from .models import Curso, Avaliacao
+        from .serializers import CursoSerializer, AvaliacaoSerializer
+
+        class CursosAPIView(generics.ListCreateAPIView):
+            queryset = Curso.objects.all()
+            serializer_class = CursoSerializer
+
+        # Busca curso, edita e deleta
+        class CursoAPIView(generics.RetrieveUpdateDestroyAPIView):
+            queryset = Curso.objects.all()
+            serializer_class = CursoSerializer
 
 
+        class AvaliacoesAPIView(generics.ListCreateAPIView):
+            queryset = Avaliacao.objects.all()
+            serializer_class = AvaliacaoSerializer
+
+        # Busca avaliacoes, edita e deleta
+        class AvaliacaoAPIView(generics.RetrieveUpdateDestroyAPIView):
+            queryset = Avaliacao.objects.all()
+            serializer_class = AvaliacaoSerializer
+        ```
+
+    - Incluir urls para retorno por id em `cursos/urls.py`
+        ```python
+        from django.urls import path
+
+        from .views import CursoAPIView, CursosAPIView, AvaliacaoAPIView, AvaliacoesAPIView
+
+
+        urlpatterns = [
+            path('cursos/', CursosAPIView.as_view(), name='cursos'),
+            path('avaliacoes/', AvaliacoesAPIView.as_view(), name='avaliacoes'),
+            path('cursos/<int:pk>', CursoAPIView.as_view(), name='curso'),
+            path('avaliacoes/<int:pk>', AvaliacaoAPIView.as_view(), name='avaliacao')
+        ]
+        ```
+
+    - Testar
+        `http://127.0.0.1:8000/api/v1/cursos/1`
+
+    </p>
+
+    </details> 
+
+    ---
 
 
 
