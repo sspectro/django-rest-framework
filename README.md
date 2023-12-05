@@ -444,6 +444,78 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+7. <span style="color:383E42"><b>APIView para HTTP GET e POST</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - HTTP GET
+        ```python
+        from rest_framework.views import APIView
+        from rest_framework.response import Response
+
+        from .models import Curso, Avaliacao
+        from .serializers import CursoSerializer, AvaliacaoSerializer
+
+
+        class CursoAPIView(APIView):
+            """
+            API de Cursos da GEEK
+            """
+
+            def get(self, request):
+                cursos = Curso.objects.all()
+                serializer = CursoSerializer(cursos, many=True)
+                return Response(serializer.data)
+
+
+        class AvaliacaoAPIView(APIView):
+            """
+            API de Avalições da GEEK
+            """
+            def get(self, request):
+                avaliacoes = Avaliacao.objects.all()
+                serializer = AvaliacaoSerializer(avaliacoes, many=True)
+                return Response(serializer.data)        
+        ```
+
+    - Criação de arquivo de rotas `urls.py` no app cursos
+        ```python
+        from django.urls import path
+
+        from .views import CursoAPIView, AvaliacaoAPIView
+
+
+        urlpatterns = [
+            path('cursos/', CursoAPIView.as_view(), name='cursos'),
+            path('avaliacoes/', AvaliacaoAPIView.as_view(), name='avaliacoes'),
+        ]
+        ```
+
+    - Incluir url em `urls.py` do projeto escola que aponta para o urls.py do app `cursos`
+        ```python
+        #...
+        urlpatterns = [
+            path('api/v1/', include('cursos.urls')),
+        #...
+        ```
+
+    - Testar
+        `http://127.0.0.1:8000/api/v1/cursos/`
+        `http://127.0.0.1:8000/api/v1/avaliacoes/`
+
+
+
+
+    </p>
+
+    </details> 
+
+    ---
+
+
+
+
+
 
 
 ## Meta
