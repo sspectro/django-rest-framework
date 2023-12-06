@@ -581,6 +581,90 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+9. <span style="color:383E42"><b>Sobrescrevendo os métodos genéricos</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Editar e incluir rotas em `cursos/urls.py`
+        ```python
+        from django.urls import path
+
+        from rest_framework.routers import SimpleRouter
+
+        from .views import (
+            CursoAPIView,
+            CursosAPIView,
+            AvaliacaoAPIView,
+            AvaliacoesAPIView,
+            #CursoViewSet,
+            #AvaliacaoViewSet
+            )
+
+
+        router = SimpleRouter()
+        #router.register('cursos', CursoViewSet)
+        #router.register('avaliacoes', AvaliacaoViewSet)
+
+
+        urlpatterns = [
+            path('cursos/', CursosAPIView.as_view(), name='cursos'),
+            path('cursos/<int:pk>/', CursoAPIView.as_view(), name='curso'),
+            path('cursos/<int:curso_pk>/avaliacoes/', AvaliacoesAPIView.as_view(), name='curso_avaliacoes'),
+            path('cursos/<int:curso_pk>/avaliacoes/<int:avaliacao_pk>/', AvaliacaoAPIView.as_view(), name='curso_avaliacao'),
+
+            path('avaliacoes/', AvaliacoesAPIView.as_view(), name='avaliacoes'),
+            path('avaliacoes/<int:avaliacao_pk>/', AvaliacaoAPIView.as_view(), name='avaliacao'),
+        ]
+        ```
+
+    - Inclusão dos métodos genéricos em 
+        ```python
+        from rest_framework import generics
+
+        from .models import Curso, Avaliacao
+        from .serializers import CursoSerializer, AvaliacaoSerializer
+        from rest_framework.generics import get_object_or_404
+
+        class CursosAPIView(generics.ListCreateAPIView):
+            queryset = Curso.objects.all()
+            serializer_class = CursoSerializer
+
+        # Busca curso, edita e deleta
+        class CursoAPIView(generics.RetrieveUpdateDestroyAPIView):
+            queryset = Curso.objects.all()
+            serializer_class = CursoSerializer
+
+
+        class AvaliacoesAPIView(generics.ListCreateAPIView):
+            queryset = Avaliacao.objects.all()
+            serializer_class = AvaliacaoSerializer
+
+            def get_queryset(self):
+                if self.kwargs.get('curso_pk'):
+                    return self.queryset.filter(curso_id=self.kwargs.get('curso_pk'))
+                return self.queryset.all()
+
+        # Busca avaliacoes, edita e deleta
+        class AvaliacaoAPIView(generics.RetrieveUpdateDestroyAPIView):
+            queryset = Avaliacao.objects.all()
+            serializer_class = AvaliacaoSerializer
+
+            def get_object(self):
+                if self.kwargs.get('curso_pk'):
+                    return get_object_or_404(self.get_queryset(),
+                                            curso_id=self.kwargs.get('curso_pk'),
+                                            pk=self.kwargs.get('avaliacao_pk'))
+                return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('avaliacao_pk'))
+        ```
+
+    - Testar
+        `http://127.0.0.1:8000/api/v1/avaliacoes/2/`
+
+    </p>
+
+    </details> 
+
+    ---
 
 
 
