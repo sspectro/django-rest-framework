@@ -217,7 +217,6 @@ Linux, Visual Studio Code, Docker e PostgreSQL
             class Meta:
                 verbose_name = 'Curso'
                 verbose_name_plural = 'Cursos'
-                ordering = ['id']  # Ordenação por id
 
             def __str__(self):
                 return self.titulo
@@ -233,8 +232,6 @@ Linux, Visual Studio Code, Docker e PostgreSQL
                 verbose_name = 'Avaliação'
                 verbose_name_plural = 'Avaliações'
                 unique_together = ['email', 'curso'] # Somente 1 avaliação com mesmo curso e email
-                ordering = ['id']  # Ordena o modelo pelo id, caso queira ordem inversa (decrescente)
-                # ordering = ['-id']  # Ordena o modelo pelo id, ordem inversa (decrescente)
 
             def __str__(self):
                 return f'{self.nome} avaliou o curso {self.curso} com nota {self.avaliacao}'
@@ -372,12 +369,6 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         from .models import Curso, Avaliacao
 
 
-        def validate_avaliacao(valor):
-            if valor in range(1, 6):
-                return valor
-            raise serializers.ValidationError('Aavaliação precisa ser um inteiro entre 1 e 5')
-
-
         # Nome padronizado: Nome do Objeto + Serializer
         class AvaliacaoSerializer(serializers.ModelSerializer):  # Herda ModelSerializer
 
@@ -426,13 +417,6 @@ Linux, Visual Studio Code, Docker e PostgreSQL
                     'avaliacoes',
                     'media_avaliacoes'
                 )
-
-            def get_media_avaliacoes(self, obj):
-                media = obj.avaliacoes.aggregate(Avg('avaliacao')).get('avaliacao__avg')
-
-                if media is None:
-                    return 0
-                return round(media * 2) / 2
 
         ```
 
@@ -776,6 +760,99 @@ Linux, Visual Studio Code, Docker e PostgreSQL
     </details> 
 
     ---
+
+12. <span style="color:383E42"><b>Incluindo Paginação e Ordenação</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Em `escola/settings.py`
+        ```python
+        #...
+        # DRF
+        REST_FRAMEWORK = {
+            'DEFAULT_AUTHENTICATION_CLASSES': (
+                'rest_framework.authentication.SessionAuthentication',
+            ),
+            'DEFAULT_PERMISSION_CLASSES': (
+                'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+            ),
+            'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+            'PAGE_SIZE': 2 # Define quantidade de elementos por página
+        }
+        #...
+        ```
+
+    - Incluir ordenação aos modelos
+        ```python
+        from django.db import models
+
+        # Create your models here.
+        class Base(models.Model):
+            criacao = models.DateTimeField(auto_now_add=True)
+            atualizacao = models.DateTimeField(auto_now=True)
+            ativo = models.BooleanField(default=True)
+
+            class Meta:
+                abstract = True
+
+        class Curso(Base):
+            titulo = models.CharField(max_length=255)
+            url = models.URLField(unique=True)
+
+            class Meta:
+                verbose_name = 'Curso'
+                verbose_name_plural = 'Cursos'
+                ordering = ['id']  # Ordenação por id
+
+            def __str__(self):
+                return self.titulo
+            
+        class Avaliacao(Base):
+            curso = models.ForeignKey(Curso, related_name='avaliacoes', on_delete=models.CASCADE)
+            nome = models.CharField(max_length=255)
+            email = models.EmailField()
+            comentario = models.TextField(blank=True, default='')
+            avaliacao = models.DecimalField(max_digits=2, decimal_places=1)
+
+            class Meta:
+                verbose_name = 'Avaliação'
+                verbose_name_plural = 'Avaliações'
+                unique_together = ['email', 'curso'] # Somente 1 avaliação com mesmo curso e email
+                ordering = ['id']  # Ordena o modelo pelo id, caso queira ordem inversa (decrescente)
+                # ordering = ['-id']  # Ordena o modelo pelo id, ordem inversa (decrescente)
+
+            def __str__(self):
+                return f'{self.nome} avaliou o curso {self.curso} com nota {self.avaliacao}'
+        ```
+    
+    - Paginação em método criado ou sobrescrito em `cursos/views.py`
+        ```python
+        #...
+        class CursoViewSet(viewsets.ModelViewSet):
+        queryset = Curso.objects.all()
+        serializer_class = CursoSerializer
+
+        @action(detail=True, methods=['get'])
+        def avaliacoes(self, request, pk=None):
+            self.pagination_class.page_size = 1
+            avaliacoes = Avaliacao.objects.filter(curso_id=pk)
+            page = self.paginate_queryset(avaliacoes)
+
+            if page is not None:
+                serializer = AvaliacaoSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+        
+            serializer = AvaliacaoSerializer(avaliacoes, many=True)
+            return Response(serializer.data)
+        #...
+        ```
+
+    </p>
+
+    </details> 
+
+    ---
+
 
 
 ## Meta
