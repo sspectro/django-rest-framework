@@ -738,6 +738,45 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+11. <span style="color:383E42"><b>Utilizando Relações com Django REST</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - `cursos/serializers.py`
+        ```python
+        class CursoSerializer(serializers.ModelSerializer):
+        # Nested Relationship - Somente viável em caso de poucos dados a trafegar
+        # avaliacoes = AvaliacaoSerializer(many=True, read_only=True)
+
+        # HyperLinked Related Field - a view_name = avaliacao-detail deve ser escrita assim, pois é o padrão
+        # Pois a rota foi criada automaticamente
+        # Retorna um link para cada avaliação referente ao curso
+        # avaliacoes = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='avaliacao-detail')
+
+        # Primary Key Related Field - Retorna todos ids das avaliacoes
+        avaliacoes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+        media_avaliacoes = serializers.SerializerMethodField()
+
+        class Meta:
+            model = Curso
+            fields = (
+                'id',
+                'titulo',
+                'url',
+                'criacao',
+                'ativo',
+                'avaliacoes',
+                'media_avaliacoes'
+            )
+        ```
+
+    </p>
+
+    </details> 
+
+    ---
+
 
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>

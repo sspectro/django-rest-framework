@@ -46,7 +46,7 @@ class CursoSerializer(serializers.ModelSerializer):
     # Retorna um link para cada avaliação referente ao curso
     # avaliacoes = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='avaliacao-detail')
 
-    # Primary Key Related Field - Retorna todos ids da
+    # Primary Key Related Field - Retorna todos ids das avaliacoes
     avaliacoes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     media_avaliacoes = serializers.SerializerMethodField()
