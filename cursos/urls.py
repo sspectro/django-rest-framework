@@ -7,14 +7,14 @@ from .views import (
     CursosAPIView,
     AvaliacaoAPIView,
     AvaliacoesAPIView,
-    #CursoViewSet,
-    #AvaliacaoViewSet
+    CursoViewSet,
+    AvaliacaoViewSet
     )
 
 
 router = SimpleRouter()
-#router.register('cursos', CursoViewSet)
-#router.register('avaliacoes', AvaliacaoViewSet)
+router.register('cursos', CursoViewSet)
+router.register('avaliacoes', AvaliacaoViewSet)
 
 
 urlpatterns = [

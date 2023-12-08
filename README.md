@@ -581,7 +581,7 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
-9. <span style="color:383E42"><b>Sobrescrevendo os métodos genéricos</b></span>
+9. <span style="color:383E42"><b>API v2 e Sobrescrevendo métodos genéricos - Uso ViewSets e Routers</b></span>
     <details><summary><span style="color:Chocolate">Detalhes</span></summary>
     <p>
 
@@ -596,14 +596,14 @@ Linux, Visual Studio Code, Docker e PostgreSQL
             CursosAPIView,
             AvaliacaoAPIView,
             AvaliacoesAPIView,
-            #CursoViewSet,
-            #AvaliacaoViewSet
+            CursoViewSet,
+            AvaliacaoViewSet
             )
 
 
         router = SimpleRouter()
-        #router.register('cursos', CursoViewSet)
-        #router.register('avaliacoes', AvaliacaoViewSet)
+        router.register('cursos', CursoViewSet)
+        router.register('avaliacoes', AvaliacaoViewSet)
 
 
         urlpatterns = [
@@ -617,14 +617,37 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         ]
         ```
 
-    - Inclusão dos métodos genéricos em 
+    - Incluir as novas rotas em `escola/urls.py`
+        ```python
+        from django.contrib import admin
+        from django.urls import path, include
+
+        from cursos.urls import router
+
+        urlpatterns = [
+            path('api/v1/', include('cursos.urls')),
+            path('api/v2/', include(router.urls)),
+            path('admin/', admin.site.urls),
+            path('api-auth/', include('rest_framework.urls')),
+        ]
+        ```
+
+    - Inclusão/sobrescrita dos métodos genéricos em `cursos/views.py`
         ```python
         from rest_framework import generics
+        from rest_framework.generics import get_object_or_404
+
+        from rest_framework import viewsets
+        from rest_framework.decorators import action
+        from rest_framework.response import Response
+        from rest_framework import mixins
 
         from .models import Curso, Avaliacao
         from .serializers import CursoSerializer, AvaliacaoSerializer
-        from rest_framework.generics import get_object_or_404
 
+        """
+        API V1
+        """
         class CursosAPIView(generics.ListCreateAPIView):
             queryset = Curso.objects.all()
             serializer_class = CursoSerializer
@@ -633,7 +656,6 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         class CursoAPIView(generics.RetrieveUpdateDestroyAPIView):
             queryset = Curso.objects.all()
             serializer_class = CursoSerializer
-
 
         class AvaliacoesAPIView(generics.ListCreateAPIView):
             queryset = Avaliacao.objects.all()
@@ -655,6 +677,27 @@ Linux, Visual Studio Code, Docker e PostgreSQL
                                             curso_id=self.kwargs.get('curso_pk'),
                                             pk=self.kwargs.get('avaliacao_pk'))
                 return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('avaliacao_pk'))
+
+
+        """
+        API V2
+        """
+
+
+        class CursoViewSet(viewsets.ModelViewSet):
+            queryset = Curso.objects.all()
+            serializer_class = CursoSerializer
+
+            @action(detail=True, methods=['get'])
+            def avaliacoes(self, request, pk=None):
+                curso = self.get_object()
+                serializer = AvaliacaoSerializer(curso.avaliacoes.all(), many=True)
+                return Response(serializer.data)
+
+        class AvaliacaoViewSet(viewsets.ModelViewSet):
+            queryset = Avaliacao.objects.all()
+            serializer_class = AvaliacaoSerializer
+        
         ```
 
     - Testar
@@ -666,6 +709,18 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+
+10. <span style="color:383E42"><b>Utilizando viewSets e Routers</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+
+
+    </p>
+
+    </details> 
+
+    ---
 
 
 ## Meta
