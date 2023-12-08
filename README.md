@@ -710,9 +710,25 @@ Linux, Visual Studio Code, Docker e PostgreSQL
     ---
 
 
-10. <span style="color:383E42"><b>Utilizando viewSets e Routers</b></span>
+10. <span style="color:383E42"><b>Customizando as ViewSets</b></span>
     <details><summary><span style="color:Chocolate">Detalhes</span></summary>
     <p>
+
+    Caso não queira alguma das ações disponíveis, basta comentar/remover
+    - `cursos/views.py`
+        ```python
+        #...
+        class AvaliacaoViewSet(
+            mixins.ListModelMixin,
+            mixins.CreateModelMixin,
+            mixins.RetrieveModelMixin,
+            mixins.UpdateModelMixin,
+            mixins.DestroyModelMixin,
+            viewsets.GenericViewSet
+        ):
+            queryset = Avaliacao.objects.all()
+            serializer_class = AvaliacaoSerializer
+        ```
 
 
 
