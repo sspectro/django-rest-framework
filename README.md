@@ -854,6 +854,79 @@ Linux, Visual Studio Code, Docker e PostgreSQL
     ---
 
 
+13. <span style="color:383E42"><b>Autenticação via Token</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Inclusão do app authentication em `escola/settings.py`
+        ```python
+        INSTALLED_APPS = [
+            'django.contrib.admin',
+            'django.contrib.auth',
+            'django.contrib.contenttypes',
+            'django.contrib.sessions',
+            'django.contrib.messages',
+            'django.contrib.staticfiles',
+
+            'django_filters',
+            'rest_framework',
+            'rest_framework.authtoken',
+
+            'cursos',
+        ]
+
+        #...
+
+        # DRF
+        REST_FRAMEWORK = {
+            'DEFAULT_AUTHENTICATION_CLASSES': (
+                #'rest_framework.authentication.SessionAuthentication',
+                'rest_framework.authentication.TokenAuthentication',
+            ),
+            'DEFAULT_PERMISSION_CLASSES': (
+                'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+            ),
+            'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+            'PAGE_SIZE': 2 # Define quantidade de elementos por página
+        }
+        #...
+        ```
+    
+    - Executar migração
+        ```bash
+        python3 manage.py migrate
+        ```
+
+    - Exemplo pegar token utilizando o shell/code
+        ```bash
+        python3 manage.py shell
+        from rest_framework.authtoken.models import Token
+        from django.contrib.auth.models import User
+        cristiano = User.objects.get(id=1)
+        cristiano
+        cristiano.email
+        cristiano.username
+        token = Token.objects.create(user=cristiano)
+        token.key
+        ```
+
+    - Testar com postman ou insomnia
+        Inserir um curso
+        `http://127.0.0.1:8000/api/v2/cursos/`
+        Metodo POST
+        Text JSON
+        Headers:
+            Content-Type application/json
+            Authorization Token e8d3fff8b039a285c07d2eee2bb49851ff454678
+
+
+
+    </p>
+
+    </details> 
+
+    ---
+
 
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>
