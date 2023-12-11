@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 
 TokenTeste = e8d3fff8b039a285c07d2eee2bb49851ff454678
+usuarioNovoTeste felicity= ff@@3456
+usuarioNovoTesteToken felicity = 74fa1f8c64b1e9352268ddd5669c896ab227f214
 """
 
 import os

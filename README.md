@@ -927,6 +927,67 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+14. <span style="color:383E42"><b>Uso de Permissões</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Info
+        ```python
+        from rest_framework import permissions
+
+        print(dir(permissions))
+        ```
+
+    - Permissões no nível da view - `cursos/views.py`
+        As permissões em nível da view tem prioridade sobre as permissões globais(em settings.py)
+        ```python
+        #...
+        from rest_framework import permissions
+
+        from .models import Curso, Avaliacao
+        from .serializers import CursoSerializer, AvaliacaoSerializer
+        from .permissions import EhSuperUser
+        #...
+
+        class CursoViewSet(viewsets.ModelViewSet):
+            # Caso a primeira classe(EhSuperUser) resolva, as demais não serão verificadas
+            permission_classes = (
+                EhSuperUser,
+                permissions.DjangoModelPermissions,
+                )
+            #...
+        ```
+
+    - Testar via postman ou insomnia
+        ```
+        Criar um novo usuário django via painel admin
+        Adicionar um modelo as permissões do usuário - Em `Permissões do usuário: cursos | Curso | Can add Curso`
+        Adicionar um token para este usuário
+
+        Verificar permissões com postman ou insomnia
+        ```
+
+    - Criar classe com configuração de permissões
+        ```python
+        from rest_framework import permissions
+
+        class EhSuperUser(permissions.BasePermission):
+
+            def has_permission(self, request, view):
+                if request.method == 'DELETE':
+                    if request.user.is_superuser:
+                        return True
+                    return False
+                return True
+        ```
+
+
+    </p>
+
+    </details> 
+
+    ---
+
 
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>
