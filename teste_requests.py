@@ -36,9 +36,9 @@ avaliacoes = requests.get('http://localhost:8000/api/v2/avaliacoes/')
 # print(avaliacao.json())
 
 # GET Cursos
-headers = {'Authorization': 'Token e8d3fff8b039a285c07d2eee2bb49851ff454678'}
+# headers = {'Authorization': 'Token e8d3fff8b039a285c07d2eee2bb49851ff454678'}
 
-cursos = requests.get(url='http://localhost:8000/api/v2/cursos/', headers=headers)
+# cursos = requests.get(url='http://localhost:8000/api/v2/cursos/', headers=headers)
 
-print(cursos.status_code)
-print(cursos.json())
+# print(cursos.status_code)
+# print(cursos.json())
