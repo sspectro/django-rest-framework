@@ -950,7 +950,9 @@ Linux, Visual Studio Code, Docker e PostgreSQL
         #...
 
         class CursoViewSet(viewsets.ModelViewSet):
-            # Caso a primeira classe(EhSuperUser) resolva, as demais não serão verificadas
+            # Ao configurar permissions na view, o django percorre as classes em 
+            # permission_classes até que encontre uma que resolva a permissão. Deve se atentar
+            # para ordem em que é colocada as classes.
             permission_classes = (
                 EhSuperUser,
                 permissions.DjangoModelPermissions,
@@ -980,6 +982,36 @@ Linux, Visual Studio Code, Docker e PostgreSQL
                     return False
                 return True
         ```
+
+
+    </p>
+
+    </details> 
+
+    ---
+
+15. <span style="color:383E42"><b>Limitando o número de requisições</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Colocar as configurações do Throttling em `escola/settings.py`
+        ```python
+        #...
+        'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        ),
+        'DEFAULT_THROTTLE_RATES': {
+            'anon': '5/minute',  # second, day, month, year
+            'user': '10/minute'
+        }
+        #...
+        ```
+
+    - Testar 
+        Opção anônima - Executar mais de 5 consultas via navegador ou postman/insomnia em menos de u 1 minuto.
+        Na sexta requisição exibirá uma mensagem de aviso.
+
 
 
     </p>

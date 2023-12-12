@@ -52,7 +52,9 @@ API V2
 
 
 class CursoViewSet(viewsets.ModelViewSet):
-    # Caso a primeira classe(EhSuperUser) resolva, as demais não serão verificadas
+    # Ao configurar permissions na view, o django percorre as classes em 
+    # permission_classes até que encontre uma que resolva a permissão. Deve se atentar
+    # para ordem em que é colocada as classes.
     permission_classes = (
         EhSuperUser,
         permissions.DjangoModelPermissions,
