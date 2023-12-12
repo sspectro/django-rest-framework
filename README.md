@@ -1020,6 +1020,54 @@ Linux, Visual Studio Code, Docker e PostgreSQL
 
     ---
 
+16. <span style="color:383E42"><b>Customisando validação de dados</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Validando campo `avaliacao` em `cursos/serializers.py`
+        ```python
+        #...
+        class AvaliacaoSerializer(serializers.ModelSerializer):  # Herda ModelSerializer
+
+            #...
+            def validate_avaliacao(self,valor):
+                if valor in range(1, 6):
+                    return valor
+                raise serializers.ValidationError('Aavaliação precisa ser um inteiro entre 1 e 5')
+        ```
+
+
+    </p>
+
+    </details> 
+
+    ---
+
+17. <span style="color:383E42"><b>Customisando a serialização de dados</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Em `cursos/serializers.py` [Link](https://www.udemy.com/course/criando-apis-rest-com-django-rest-framework-essencial/learn/lecture/17827846#overview)
+        ```python
+        #...
+        from django.db.models import Avg # Classe python que retorna média
+        #...
+        # Função para o campo "media_avaliacoes" - nome deve ser "get_nomeCampo" 
+        def get_media_avaliacoes(self, obj):
+            media = obj.avaliacoes.aggregate(Avg('avaliacao')).get('avaliacao__avg')
+
+            if media is None:
+                return 0
+            return round(media * 2) / 2
+
+        ```
+
+    </p>
+
+    </details> 
+
+    ---
+
 
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>
