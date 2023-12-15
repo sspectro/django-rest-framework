@@ -1262,6 +1262,21 @@ Linux, Visual Studio Code, Docker e PostgreSQL
     ---
 
 
+5. <span style="color:383E42"><b>Testando o método PUT</b></span>
+    <details><summary><span style="color:Chocolate">Detalhes</span></summary>
+    <p>
+
+    - Criar arquivo `teste_put.py` na raiz
+
+
+    </p>
+
+    </details> 
+
+    ---
+
+
+
 ## Meta
 ><span style="color:383E42"><b>Cristiano Mendonça Gueivara</b> </span>
 >
